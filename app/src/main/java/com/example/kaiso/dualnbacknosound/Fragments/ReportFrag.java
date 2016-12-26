@@ -19,9 +19,9 @@ import com.example.kaiso.dualnbacknosound.R;
  * Created by kaiso on 12/26/2016.
  */
 public class ReportFrag extends Fragment{
-    int level;
+    int nback;
     GameFrag gameFragment;
-
+    int progress;
 
 
 //    public ReportFrag() {
@@ -45,7 +45,7 @@ public class ReportFrag extends Fragment{
         Bundle bundle = this.getArguments();
         int correct = bundle.getInt("correct");
         int wrong = bundle.getInt("wrong");
-        level = bundle.getInt("level");
+        nback = bundle.getInt("nback");
 
         TextView correctPrompt = (TextView) view.findViewById(R.id.correctPro);
         TextView wrongPrompt = (TextView) view.findViewById(R.id.wrongPro);
@@ -54,7 +54,10 @@ public class ReportFrag extends Fragment{
         Log.d("Test2", "xxxxxxx correct:" + correct + "wrong:" + wrong );
 
         Button nextGame = (Button) view.findViewById(R.id.nextpage);
-        level++;
+        if(wrong < 4) {
+            nback++;
+            progress = (nback * 100) + progress;
+        }
 
         nextGame.setOnClickListener(new View.OnClickListener()
         {
@@ -63,8 +66,8 @@ public class ReportFrag extends Fragment{
             {
 
                 Bundle bundle = new Bundle();
-                bundle.putInt("level", level);
-
+                bundle.putInt("nback", nback);
+                bundle.putInt("progress", progress);
 
                 gameFragment.setArguments(bundle);
 

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,10 +49,15 @@ public class GameFrag extends Fragment implements View.OnClickListener{
     int i = 0;
     int newNum;
     int oldNum;
+    int randomNum;
+    int ranking = 1;
+    int progress = 0;
     MediaPlayer mediaPlayer;
+    MediaPlayer letterA;
+    MediaPlayer letterB;
     ArrayList<Integer> calc;
     long startTime = 0;
-    int level = 1;
+    int nback = 1;
 
 
     public GameFrag() {
@@ -95,7 +101,7 @@ public class GameFrag extends Fragment implements View.OnClickListener{
                 //timerHandler.postDelayed(timerRunnable, 0);
 
                 calc.add(selected);
-                if (check(i, level)){
+                if (check(i, nback)){
                     correct++;
                     Toast.makeText(getActivity().getApplicationContext(), "yeahhhhhh correct:" + correct + "wrong:" + wrong + "arr:" + calc, Toast.LENGTH_LONG).show();
 
@@ -122,14 +128,15 @@ public class GameFrag extends Fragment implements View.OnClickListener{
                 }
             }
 
-            if(i > (0 + level)){
+            if(i > (10 + nback)){
 
                // productFragment.setArguments(bundle);
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("correct", correct);
+                wrong = wrong - (nback + 1);
                 bundle.putInt("wrong", wrong);
-                bundle.putInt("level", level);
+                bundle.putInt("nback", nback);
 
                 reportFragment.setArguments(bundle);
 
@@ -164,14 +171,17 @@ public class GameFrag extends Fragment implements View.OnClickListener{
         actionBar.setDisplayShowCustomEnabled(true);
         title.setText("DualNBack");
         calc = new ArrayList();
-        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.clicksound);
+        letterA = MediaPlayer.create(getActivity(), R.raw.letter_a);
+        letterB = MediaPlayer.create(getActivity(), R.raw.letter_b);
 
         Bundle bundle = this.getArguments();
         try {
-            level = bundle.getInt("level");
+            nback = bundle.getInt("nback");
+            progress = bundle.getInt("progress");
         }catch(Exception e){
 
-            level = 1;
+            nback = 1;
+            progress = 0;
         }
 
 
@@ -269,8 +279,16 @@ public class GameFrag extends Fragment implements View.OnClickListener{
         nine.setOnClickListener(this);
         button.setOnClickListener(this);
 
-        TextView levelPrompt = (TextView) view.findViewById(R.id.level);
-        levelPrompt.setText("level:" + level);
+        TextView levelPrompt = (TextView) view.findViewById(R.id.nback);
+        levelPrompt.setText(nback + "NBack");
+
+        ranking = (int)(progress / ((500*ranking)*1.1)) + 1;
+
+        ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
+        bar.setProgress((int)(((double)progress / (((500*(double)ranking)*1.1)))* 100));
+        //bar.setProgress(50);
+        TextView rankingPrompt = (TextView) view.findViewById(R.id.levels);
+        rankingPrompt.setText("level" + ranking +  "exp:" + progress);
 
         return view;
 
@@ -292,36 +310,60 @@ public void setSquares(View view){
 
     public void generateSquares(){
         Random generated = new Random();
-        int randomNum;
-        randomNum = generated.nextInt(9) + 1;
+        int randomNewNum;
+        int randomLetter;
+        while(true) {
+            randomNewNum = generated.nextInt(9) + 1;
+            randomLetter = generated.nextInt(2) + 1;
+            if(randomNewNum != randomNum) {
+                randomNum = randomNewNum;
+                break;
+            }
+        }
+
+        //mediaPlayer.start();
+
         setColor(randomNum);
+        setLetter(randomLetter);
 
     }
 public LinearLayout returnNum(int num){
 
-    if(1 == num){
-        //setColor(1);
-        return one;
-    }else if(2 == num){
-        return two;
-    }else if(3 == num){
-        return three;
-    }else if(4 == num){
-        return four;
-    }else if(5 == num){
-        return five;
-    }else if(6 == num){
-        return six;
-    }else if(7 == num){
-        return seven;
-    }else if(8 == num){
-        return eight;
-    }else{
-        return nine;
+        if(1 == num){
+            //setColor(1);
+            return one;
+        }else if(2 == num){
+            return two;
+        }else if(3 == num){
+            return three;
+        }else if(4 == num){
+            return four;
+        }else if(5 == num){
+            return five;
+        }else if(6 == num){
+            return six;
+        }else if(7 == num){
+            return seven;
+        }else if(8 == num){
+            return eight;
+        }else{
+            return nine;
+        }
+
+
     }
 
+    public MediaPlayer returnLetter(int num){
 
-}
+        if(1 == num){
+
+            return letterA;
+        }else{
+            return letterB;
+        }
+
+
+    }
 
     public void setColor(int num){
 
@@ -342,6 +384,12 @@ public LinearLayout returnNum(int num){
 //        });
         setOthers(num);
 
+
+    }
+
+    public void setLetter(int num){
+
+        returnLetter(num).start();
 
     }
 
