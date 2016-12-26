@@ -120,9 +120,16 @@ public class GameFrag extends Fragment implements View.OnClickListener{
                 }
             }
 
-            if(i > (10 + level)){
+            if(i > (15 + level)){
 
                // productFragment.setArguments(bundle);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("correct", correct);
+                bundle.putInt("wrong", wrong);
+                bundle.putInt("level", level);
+
+                reportFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.addToBackStack(null);
@@ -156,6 +163,16 @@ public class GameFrag extends Fragment implements View.OnClickListener{
         title.setText("DualNBack");
         calc = new ArrayList();
         mediaPlayer = MediaPlayer.create(getActivity(), R.raw.clicksound);
+
+        Bundle bundle = this.getArguments();
+        try {
+            level = bundle.getInt("level");
+        }catch(Exception e){
+
+            level = 1;
+        }
+
+
        // final MediaPlayer mBob = MediaPlayer.create(getActivity(), R.raw.clicksound);
         //mBob.start();
 //        mBob.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -249,6 +266,10 @@ public class GameFrag extends Fragment implements View.OnClickListener{
         eight.setOnClickListener(this);
         nine.setOnClickListener(this);
         button.setOnClickListener(this);
+
+        TextView levelPrompt = (TextView) view.findViewById(R.id.level);
+        levelPrompt.setText("level:" + level);
+
         return view;
 
     }
