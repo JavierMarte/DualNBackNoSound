@@ -1,7 +1,9 @@
 package com.example.kaiso.dualnbacknosound.Fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -120,7 +122,7 @@ public class GameFrag extends Fragment implements View.OnClickListener{
                 }
             }
 
-            if(i > (15 + level)){
+            if(i > (0 + level)){
 
                // productFragment.setArguments(bundle);
 

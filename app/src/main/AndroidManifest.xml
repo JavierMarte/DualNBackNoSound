@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GameMode"
+            android:noHistory="true"
             android:label="name">
         </activity>
     </application>
