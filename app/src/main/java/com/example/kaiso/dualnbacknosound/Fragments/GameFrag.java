@@ -1,6 +1,7 @@
 package com.example.kaiso.dualnbacknosound.Fragments;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.Random;
 public class GameFrag extends Fragment implements View.OnClickListener{
     Fragment someFragment;
     TextView timerTextView;
+    ReportFrag reportFragment;
     LinearLayout one = null;
     LinearLayout two = null;
     LinearLayout three = null;
@@ -48,13 +50,17 @@ public class GameFrag extends Fragment implements View.OnClickListener{
     ArrayList<Integer> calc;
     long startTime = 0;
     int level = 1;
+
+
+    public GameFrag() {
+        reportFragment = new ReportFrag();
+    }
 //need another argument for gamemode
     public boolean check(int i , int level){
 
         if(i >= level ) {
             if (calc.get(i - level) == clicked) {
                 return true;
-
 
             }
         }
@@ -114,6 +120,16 @@ public class GameFrag extends Fragment implements View.OnClickListener{
                 }
             }
 
+            if(i > (10 + level)){
+
+               // productFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.frameLayout, reportFragment);
+                transaction.commit();
+
+            }
             timerHandler.postDelayed(this, 500);
             }
 
